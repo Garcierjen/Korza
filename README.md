@@ -1,4 +1,5 @@
 # Korza
+windows only
 
 auto downloads essential program for me.
 
