@@ -3,41 +3,34 @@
 #include <string.h>
 #include <unistd.h>
 
-// Utility function to check if an element exists in an array (for command validation)
+
 int contains(char *array[], int size, const char *value) {
     for (int i = 0; i < size; i++) {
         if (strcmp(array[i], value) == 0) {
-            return 1;  // Found
+            return 1;
         }
     }
-    return 0;  // Not found
+    return 0;
 }
 
-// Sleep function in C (standard POSIX)
 void sleep_seconds(int seconds) {
     sleep(seconds);
 }
-
-// Function to clear screen (similar to Lua's os.execute("cls"))
+ 
 void clear_screen() {
     system("cls");
 }
 
-// Function to execute system commands
 void execute_command(const char *cmd) {
     system(cmd);
 }
 
 // Main function
 int main() {
-    // Sleep for 1 second
     execute_command("color 0B");
-
-    // Clear the screen and print initial information
     clear_screen();
     printf("made by jenohohjen on discord.\n");
 
-    // Define valid commands and descriptions
     char *command[][2] = {
         {"install", "            Install package in the list."},
         {"install list", "       List package."},
@@ -51,39 +44,29 @@ int main() {
     };
     int command_count = sizeof(command) / sizeof(command[0]);
 
-    // Extract only command names for validation
     char *valid_commands[command_count];
     for (int i = 0; i < command_count; i++) {
         valid_commands[i] = command[i][0];
     }
 
-    // Misspelled commands
     char *misspelled_commands[] = {"restart", "exit tool", "clear", "clr", "dir", ""};
     int misspelled_count = sizeof(misspelled_commands) / sizeof(misspelled_commands[0]);
-
-    // Display tool information
-    printf("This tool only works on Windows-based OS and requires internet for it to work properly.\n");
-
-    // Main command loop
+    printf("This tool only works on Windows-based OS and requires internet for it to work properly.\n")
     while (1) {
         char input[256];
         printf("Korza: ");
         fgets(input, sizeof(input), stdin);
-
-        // Remove newline character from input
         input[strcspn(input, "\n")] = 0;
-
-        // Convert input to lowercase
         for (int i = 0; input[i]; i++) {
             input[i] = tolower((unsigned char) input[i]);
         }
-
-        // Check for misspelled commands
         if (!contains(misspelled_commands, misspelled_count, input)) {
             if (!contains(valid_commands, command_count, input)) {
                 printf("Invalid input: \"%s\". Try running \"%s\"?\n", input, "help");
             } else {
                 if (strcmp(input, "install") == 0) {
+                    printf("installing ");
+                    execute_command("pause");
                     execute_command("winget install -e --id Google.Chrome");
                     execute_command("winget install -e --id KDE.Krita");
                     execute_command("winget install -e --id BlenderFoundation.Blender.LTS.3.6");
@@ -113,8 +96,8 @@ int main() {
                 } else if (strcmp(input, "help") == 0) {
                     printf("Here are valid commands:\n");
                     for (int i = 0; i < command_count; i++) {
-                        printf("         %s%s\n", command[i][0], command[i][1]);
-                    }
+                        printf("                        %s%s\n", command[i][0], command[i][1]);
+                    }           
                 } else if (strcmp(input, "reboot") == 0) {
                     execute_command("shutdown /r");
                 } else if (strcmp(input, "cls") == 0) {
@@ -135,6 +118,5 @@ int main() {
             printf("");
         }
     }
-
     return 0;
 }
